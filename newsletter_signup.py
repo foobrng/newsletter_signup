@@ -14,6 +14,11 @@ clean_css = """
     font-family: 'Inter', sans-serif;
   }
   
+  /* Hide empty containers */
+  .block-container {
+    padding-top: 6rem !important;
+  }
+  
  
   }
   
