@@ -19,7 +19,7 @@ clean_css = """
     display: none;
   }
   
-  /* Smoke trails only */
+  /* Moving smoke trails */
   .trail-container {
     position: fixed;
     z-index: 1000;
@@ -28,54 +28,69 @@ clean_css = """
   
   .smoke-trail {
     position: absolute;
-    top: 0;
     width: 4px;
+    height: 60px;
     background: linear-gradient(to bottom, 
-      rgba(150, 150, 150, 0.5) 0%,
-      rgba(100, 100, 100, 0.3) 40%,
-      rgba(50, 50, 50, 0.1) 80%,
+      rgba(150, 150, 150, 0.8) 0%,
+      rgba(100, 100, 100, 0.6) 40%,
+      rgba(50, 50, 50, 0.3) 80%,
       transparent 100%);
     border-radius: 2px;
-    animation: trail-flicker 0.2s ease-in-out infinite alternate;
+    animation: trail-move 3s linear infinite, trail-flicker 0.3s ease-in-out infinite alternate;
+  }
+  
+  @keyframes trail-move {
+    0% { 
+      top: -80px; 
+      opacity: 0;
+    }
+    10% { 
+      opacity: 1;
+    }
+    90% { 
+      opacity: 1;
+    }
+    100% { 
+      top: 100vh; 
+      opacity: 0;
+    }
   }
   
   @keyframes trail-flicker {
     0% { 
-      height: 80px; 
-      opacity: 0.6;
       width: 3px;
+      opacity: 0.6;
     }
     100% { 
-      height: 100px; 
-      opacity: 0.8;
       width: 5px;
+      opacity: 0.9;
     }
   }
   
-  /* Trail positions */
+  /* Trail positions with staggered timing */
   .trail-1 {
-    left: 12%;
+    left: 15%;
     animation-delay: 0s;
   }
   
   .trail-2 {
-    left: 28%;
-    animation-delay: 0.5s;
+    left: 30%;
+    animation-delay: 0.6s;
   }
   
   .trail-3 {
-    left: 48%;
-    animation-delay: 1s;
+    left: 50%;
+    animation-delay: 1.2s;
   }
   
   .trail-4 {
-    left: 68%;
-    animation-delay: 1.5s;
+    left: 70%;
+    animation-delay: 1.8s;
   }
   
   .trail-5 {
-    left: 84%;
-    animation-delay: 2s;
+    left: 85%;
+    animation-delay: 2.4s;
   }
   
   /* Clean title */
@@ -95,21 +110,29 @@ clean_css = """
     font-weight: 300;
   }
   
-  /* Form styling */
+  /* Form container and styling */
+  .form-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 3rem;
+    background-color: #111111;
+    border: 1px solid #333333;
+    border-radius: 12px;
+  }
+  
   .stForm {
-    max-width: 400px;
-    margin: 0 auto;
+    max-width: 100%;
   }
   
   .success-message {
-    background-color: #333333;
-    border: 1px solid #666666;
+    background-color: #222222;
+    border: 1px solid #555555;
     border-radius: 8px;
-    padding: 1.5rem;
+    padding: 2rem;
     text-align: center;
     color: #ffffff;
     margin: 2rem auto;
-    max-width: 400px;
+    max-width: 600px;
   }
   
   .success-icon {
@@ -212,6 +235,9 @@ def main():
             st.session_state.subscriber_name = ""
             st.rerun()
     else:
+        # Form container
+        st.markdown('<div class="form-container">', unsafe_allow_html=True)
+        
         # Simple form
         with st.form("subscribe_form", clear_on_submit=True):
             name = st.text_input("Name", placeholder="Your name")
@@ -249,6 +275,8 @@ def main():
                                     
                             except Exception as e:
                                 st.error("Error subscribing. Please try again.")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
