@@ -14,9 +14,13 @@ clean_css = """
     font-family: 'Inter', sans-serif;
   }
   
-  /* Hide Streamlit header */
-  header[data-testid="stHeader"] {
-    display: none;
+  /* Hide empty containers */
+  .block-container {
+    padding-top: 1rem !important;
+  }
+  
+  .element-container:empty {
+    display: none !important;
   }
   
   /* Moving smoke trails */
@@ -36,12 +40,11 @@ clean_css = """
       rgba(50, 50, 50, 0.3) 80%,
       transparent 100%);
     border-radius: 2px;
-    animation: trail-move 3s linear infinite, trail-flicker 0.3s ease-in-out infinite alternate;
   }
   
   @keyframes trail-move {
     0% { 
-      top: -80px; 
+      bottom: -80px; 
       opacity: 0;
     }
     10% { 
@@ -51,7 +54,7 @@ clean_css = """
       opacity: 1;
     }
     100% { 
-      top: 100vh; 
+      bottom: 100vh; 
       opacity: 0;
     }
   }
@@ -67,30 +70,35 @@ clean_css = """
     }
   }
   
-  /* Trail positions with staggered timing */
+  /* Trail positions with independent timing */
   .trail-1 {
     left: 15%;
+    animation: trail-move 3.2s linear infinite, trail-flicker 0.3s ease-in-out infinite alternate;
     animation-delay: 0s;
   }
   
   .trail-2 {
     left: 30%;
-    animation-delay: 0.6s;
+    animation: trail-move 2.8s linear infinite, trail-flicker 0.4s ease-in-out infinite alternate;
+    animation-delay: 0.8s;
   }
   
   .trail-3 {
     left: 50%;
-    animation-delay: 1.2s;
+    animation: trail-move 3.5s linear infinite, trail-flicker 0.25s ease-in-out infinite alternate;
+    animation-delay: 1.6s;
   }
   
   .trail-4 {
     left: 70%;
-    animation-delay: 1.8s;
+    animation: trail-move 2.9s linear infinite, trail-flicker 0.35s ease-in-out infinite alternate;
+    animation-delay: 0.4s;
   }
   
   .trail-5 {
     left: 85%;
-    animation-delay: 2.4s;
+    animation: trail-move 3.1s linear infinite, trail-flicker 0.3s ease-in-out infinite alternate;
+    animation-delay: 2.2s;
   }
   
   /* Clean title */
