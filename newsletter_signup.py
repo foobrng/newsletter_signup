@@ -124,13 +124,18 @@ rocket_animation_svg = """
 
 st.markdown(rocket_animation_svg, unsafe_allow_html=True)
 
+import json
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
-st.title("Newsletter Signup")
-
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("email-collector-460721-110f16bcb9c7.json", scope)
+
+# Load service account info from secrets
+service_account_info = st.secrets["gcp_service_account"]
+
+# Use json.loads to convert the TOML-parsed dict into a proper JSON string
+creds = ServiceAccountCredentials.from_json_keyfile_dict(dict(service_account_info), scope)
+
 client = gspread.authorize(creds)
 sheet = client.open("Newsletter Subscribers").sheet1
 
