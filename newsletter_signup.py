@@ -14,13 +14,7 @@ clean_css = """
     font-family: 'Inter', sans-serif;
   }
   
-  /* Hide empty containers */
-  .block-container {
-    padding-top: 3rem !important;
-  }
-  
-  .element-container:empty {
-    display: none !important;
+ 
   }
   
   /* Moving smoke trails */
