@@ -14,12 +14,34 @@ clean_css = """
     font-family: 'Inter', sans-serif;
   }
   
-  /* Hide empty containers */
+  /* Hide empty containers - enhanced */
   .block-container {
-    padding-top: 1rem !important;
+    padding-top: 0.5rem !important;
   }
   
   .element-container:empty {
+    display: none !important;
+  }
+  
+  /* Hide containers with only whitespace */
+  .element-container:not(:has(*)) {
+    display: none !important;
+  }
+  
+  /* Hide specific Streamlit elements that might be empty */
+  div[data-testid="element-container"]:empty {
+    display: none !important;
+  }
+  
+  /* Hide empty blocks */
+  .block-container > div:empty {
+    display: none !important;
+  }
+  
+  /* More aggressive empty hiding */
+  .stApp > div:empty,
+  .main > div:empty,
+  div[class*="css"]:empty {
     display: none !important;
   }
   
@@ -101,13 +123,13 @@ clean_css = """
     animation-delay: 2.2s;
   }
   
-  /* Clean title */
+  /* Clean title - adjusted positioning */
   .clean-title {
     color: #ffffff;
     font-size: 2.5rem;
     font-weight: 600;
     text-align: center;
-    margin: 3rem 0 1rem 0;
+    margin: 1.5rem 0 1rem 0;
   }
   
   .subtitle {
@@ -195,6 +217,20 @@ clean_css = """
 <div class="trail-container trail-5">
   <div class="smoke-trail"></div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Remove empty divs
+    setTimeout(function() {
+        const emptyDivs = document.querySelectorAll('div:empty, div[class*="css"]:empty');
+        emptyDivs.forEach(div => {
+            if (div.textContent.trim() === '') {
+                div.style.display = 'none';
+            }
+        });
+    }, 100);
+});
+</script>
 """
 
 def validate_email(email):
