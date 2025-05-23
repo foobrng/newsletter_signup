@@ -16,7 +16,7 @@ clean_css = """
   
   /* Hide empty containers */
   .block-container {
-    padding-top: 1rem !important;
+    padding-top: 0.3rem !important;
   }
   
   .element-container:empty {
@@ -107,7 +107,7 @@ clean_css = """
     font-size: 2.5rem;
     font-weight: 600;
     text-align: center;
-    margin: 3rem 0 1rem 0;
+    margin: 1.5rem 0 1rem 0;
   }
   
   .subtitle {
