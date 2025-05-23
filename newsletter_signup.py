@@ -4,8 +4,8 @@ from google.oauth2.service_account import Credentials
 import re
 from datetime import datetime
 
-# Clean minimalist CSS with fast upward rockets
-minimalist_css = """
+# Realistic rocket launch CSS with smoke trails
+rocket_launch_css = """
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
   
@@ -14,74 +14,235 @@ minimalist_css = """
     font-family: 'Inter', sans-serif;
   }
   
-  /* Fast moving rockets */
-  .rocket {
+  /* Hide Streamlit header */
+  header[data-testid="stHeader"] {
+    display: none;
+  }
+  
+  /* Rocket with smoke trail */
+  .rocket-container {
     position: fixed;
-    font-size: 24px;
-    animation: rocket-up 2s linear infinite;
     z-index: 1000;
+    pointer-events: none;
   }
   
-  .rocket:nth-child(1) {
-    left: 15%;
-    animation-delay: 0s;
+  .rocket {
+    position: relative;
+    font-size: 28px;
+    filter: drop-shadow(0 0 8px rgba(255, 150, 0, 0.8));
   }
   
-  .rocket:nth-child(2) {
-    left: 30%;
-    animation-delay: 0.4s;
-  }
-  
-  .rocket:nth-child(3) {
+  .smoke-trail {
+    position: absolute;
+    top: 35px;
     left: 50%;
-    animation-delay: 0.8s;
+    transform: translateX(-50%);
+    width: 4px;
+    background: linear-gradient(to bottom, 
+      rgba(255, 100, 0, 0.9) 0%,
+      rgba(255, 150, 0, 0.7) 20%,
+      rgba(200, 200, 200, 0.5) 40%,
+      rgba(150, 150, 150, 0.3) 60%,
+      rgba(100, 100, 100, 0.1) 80%,
+      transparent 100%);
+    border-radius: 2px;
+    animation: trail-flicker 0.15s ease-in-out infinite alternate;
   }
   
-  .rocket:nth-child(4) {
-    left: 70%;
-    animation-delay: 1.2s;
-  }
-  
-  .rocket:nth-child(5) {
-    left: 85%;
-    animation-delay: 1.6s;
-  }
-  
-  @keyframes rocket-up {
-    0% {
-      bottom: -50px;
-      opacity: 0;
+  @keyframes trail-flicker {
+    0% { 
+      height: 60px; 
+      opacity: 0.8;
+      width: 4px;
     }
-    10% {
+    100% { 
+      height: 80px; 
       opacity: 1;
-    }
-    90% {
-      opacity: 1;
-    }
-    100% {
-      bottom: 100vh;
-      opacity: 0;
+      width: 6px;
     }
   }
   
-  /* Clean form container */
+  /* Individual rocket animations with natural movement */
+  .rocket-1 {
+    left: 12%;
+    animation: launch-1 4.2s ease-out infinite;
+  }
+  
+  .rocket-2 {
+    left: 28%;
+    animation: launch-2 3.8s ease-out infinite;
+  }
+  
+  .rocket-3 {
+    left: 48%;
+    animation: launch-3 4.5s ease-out infinite;
+  }
+  
+  .rocket-4 {
+    left: 68%;
+    animation: launch-4 3.9s ease-out infinite;
+  }
+  
+  .rocket-5 {
+    left: 84%;
+    animation: launch-5 4.1s ease-out infinite;
+  }
+  
+  @keyframes launch-1 {
+    0% { bottom: -80px; opacity: 0; transform: rotate(-5deg) scale(0.8); }
+    8% { opacity: 1; transform: rotate(0deg) scale(1); }
+    15% { transform: rotate(2deg); }
+    30% { transform: rotate(-1deg); }
+    45% { transform: rotate(1deg); }
+    70% { opacity: 1; }
+    100% { bottom: 100vh; opacity: 0; transform: rotate(0deg) scale(0.9); }
+  }
+  
+  @keyframes launch-2 {
+    0% { bottom: -80px; opacity: 0; transform: rotate(3deg) scale(0.9); }
+    12% { opacity: 1; transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(-2deg); }
+    40% { transform: rotate(1deg); }
+    60% { transform: rotate(-1deg); }
+    85% { opacity: 1; }
+    100% { bottom: 100vh; opacity: 0; transform: rotate(2deg) scale(0.8); }
+  }
+  
+  @keyframes launch-3 {
+    0% { bottom: -80px; opacity: 0; transform: rotate(-2deg) scale(1.1); }
+    6% { opacity: 1; transform: rotate(1deg) scale(1); }
+    20% { transform: rotate(-1deg); }
+    35% { transform: rotate(2deg); }
+    55% { transform: rotate(0deg); }
+    80% { opacity: 1; }
+    100% { bottom: 100vh; opacity: 0; transform: rotate(-1deg) scale(0.9); }
+  }
+  
+  @keyframes launch-4 {
+    0% { bottom: -80px; opacity: 0; transform: rotate(4deg) scale(0.7); }
+    10% { opacity: 1; transform: rotate(0deg) scale(1); }
+    18% { transform: rotate(-3deg); }
+    32% { transform: rotate(1deg); }
+    48% { transform: rotate(-1deg); }
+    75% { opacity: 1; }
+    100% { bottom: 100vh; opacity: 0; transform: rotate(2deg) scale(1.1); }
+  }
+  
+  @keyframes launch-5 {
+    0% { bottom: -80px; opacity: 0; transform: rotate(-3deg) scale(0.9); }
+    14% { opacity: 1; transform: rotate(1deg) scale(1); }
+    28% { transform: rotate(2deg); }
+    42% { transform: rotate(-2deg); }
+    65% { transform: rotate(0deg); }
+    90% { opacity: 1; }
+    100% { bottom: 100vh; opacity: 0; transform: rotate(-1deg) scale(0.8); }
+  }
+  
+  /* Glitch effect for title */
+  .glitch-title {
+    color: #ffffff;
+    font-size: 2.5rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    position: relative;
+    animation: glitch-skew 2s infinite linear alternate-reverse;
+  }
+  
+  .glitch-title::before,
+  .glitch-title::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .glitch-title::before {
+    animation: glitch-anim 2s infinite linear alternate-reverse;
+    color: #ff0040;
+    z-index: -1;
+  }
+  
+  .glitch-title::after {
+    animation: glitch-anim2 1s infinite linear alternate-reverse;
+    color: #00ff41;
+    z-index: -2;
+  }
+  
+  @keyframes glitch-anim {
+    0% { clip: rect(64px, 9999px, 66px, 0); }
+    5% { clip: rect(30px, 9999px, 36px, 0); }
+    10% { clip: rect(87px, 9999px, 91px, 0); }
+    15% { clip: rect(42px, 9999px, 43px, 0); }
+    20% { clip: rect(17px, 9999px, 18px, 0); }
+    25% { clip: rect(68px, 9999px, 72px, 0); }
+    30% { clip: rect(23px, 9999px, 24px, 0); }
+    35% { clip: rect(54px, 9999px, 58px, 0); }
+    40% { clip: rect(12px, 9999px, 15px, 0); }
+    45% { clip: rect(37px, 9999px, 41px, 0); }
+    50% { clip: rect(82px, 9999px, 86px, 0); }
+    55% { clip: rect(29px, 9999px, 33px, 0); }
+    60% { clip: rect(71px, 9999px, 75px, 0); }
+    65% { clip: rect(48px, 9999px, 52px, 0); }
+    70% { clip: rect(19px, 9999px, 23px, 0); }
+    75% { clip: rect(63px, 9999px, 67px, 0); }
+    80% { clip: rect(34px, 9999px, 38px, 0); }
+    85% { clip: rect(76px, 9999px, 80px, 0); }
+    90% { clip: rect(15px, 9999px, 19px, 0); }
+    95% { clip: rect(59px, 9999px, 63px, 0); }
+    100% { clip: rect(26px, 9999px, 30px, 0); }
+  }
+  
+  @keyframes glitch-anim2 {
+    0% { clip: rect(25px, 9999px, 28px, 0); }
+    5% { clip: rect(73px, 9999px, 77px, 0); }
+    10% { clip: rect(46px, 9999px, 50px, 0); }
+    15% { clip: rect(11px, 9999px, 15px, 0); }
+    20% { clip: rect(81px, 9999px, 85px, 0); }
+    25% { clip: rect(38px, 9999px, 42px, 0); }
+    30% { clip: rect(65px, 9999px, 69px, 0); }
+    35% { clip: rect(22px, 9999px, 26px, 0); }
+    40% { clip: rect(58px, 9999px, 62px, 0); }
+    45% { clip: rect(33px, 9999px, 37px, 0); }
+    50% { clip: rect(79px, 9999px, 83px, 0); }
+    55% { clip: rect(14px, 9999px, 18px, 0); }
+    60% { clip: rect(52px, 9999px, 56px, 0); }
+    65% { clip: rect(27px, 9999px, 31px, 0); }
+    70% { clip: rect(74px, 9999px, 78px, 0); }
+    75% { clip: rect(41px, 9999px, 45px, 0); }
+    80% { clip: rect(69px, 9999px, 73px, 0); }
+    85% { clip: rect(16px, 9999px, 20px, 0); }
+    90% { clip: rect(85px, 9999px, 89px, 0); }
+    95% { clip: rect(31px, 9999px, 35px, 0); }
+    100% { clip: rect(57px, 9999px, 61px, 0); }
+  }
+  
+  @keyframes glitch-skew {
+    0% { transform: skew(0deg); }
+    10% { transform: skew(-1deg); }
+    20% { transform: skew(0.5deg); }
+    30% { transform: skew(-0.5deg); }
+    40% { transform: skew(0deg); }
+    50% { transform: skew(1deg); }
+    60% { transform: skew(-0.8deg); }
+    70% { transform: skew(0.3deg); }
+    80% { transform: skew(-0.2deg); }
+    90% { transform: skew(0.1deg); }
+    100% { transform: skew(0deg); }
+  }
+  
+  /* Form container */
   .form-container {
     background-color: #ffffff;
     border-radius: 12px;
     padding: 3rem;
     max-width: 500px;
-    margin: 5rem auto;
-    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+    margin: 3rem auto;
+    box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
     position: relative;
     z-index: 100;
-  }
-  
-  .main-title {
-    color: #000000;
-    font-size: 2rem;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 0.5rem;
   }
   
   .subtitle {
@@ -92,7 +253,6 @@ minimalist_css = """
     font-weight: 300;
   }
   
-  /* Success message */
   .success-message {
     background-color: #f0f9ff;
     border: 1px solid #0ea5e9;
@@ -109,12 +269,31 @@ minimalist_css = """
   }
 </style>
 
-<!-- 5 Fast Rockets -->
-<div class="rocket">🚀</div>
-<div class="rocket">🚀</div>
-<div class="rocket">🚀</div>
-<div class="rocket">🚀</div>
-<div class="rocket">🚀</div>
+<!-- 5 Rockets with smoke trails and random delays -->
+<div class="rocket-container rocket-1">
+  <div class="rocket">🚀</div>
+  <div class="smoke-trail"></div>
+</div>
+
+<div class="rocket-container rocket-2">
+  <div class="rocket">🚀</div>
+  <div class="smoke-trail"></div>
+</div>
+
+<div class="rocket-container rocket-3">
+  <div class="rocket">🚀</div>
+  <div class="smoke-trail"></div>
+</div>
+
+<div class="rocket-container rocket-4">
+  <div class="rocket">🚀</div>
+  <div class="smoke-trail"></div>
+</div>
+
+<div class="rocket-container rocket-5">
+  <div class="rocket">🚀</div>
+  <div class="smoke-trail"></div>
+</div>
 """
 
 def validate_email(email):
@@ -136,16 +315,17 @@ def connect_to_sheets():
 
 def main():
     # Apply CSS
-    st.markdown(minimalist_css, unsafe_allow_html=True)
+    st.markdown(rocket_launch_css, unsafe_allow_html=True)
+    
+    # Glitch title
+    st.markdown("""
+    <h1 class="glitch-title" data-text="T̶h̴o̴u̷g̸h̸t̵s̵ & O̵t̴h̸e̴r̸ G̸l̵i̶t̵c̴h̶e̷s̸">T̶h̴o̴u̷g̸h̸t̵s̵ & O̵t̴h̸e̴r̸ G̸l̵i̶t̵c̴h̶e̷s̸</h1>
+    """, unsafe_allow_html=True)
     
     # Form container
     st.markdown('<div class="form-container">', unsafe_allow_html=True)
     
-    # Title
-    st.markdown("""
-    <h1 class="main-title">Newsletter</h1>
-    <p class="subtitle">Subscribe for updates</p>
-    """, unsafe_allow_html=True)
+    st.markdown('<p class="subtitle">Subscribe for updates</p>', unsafe_allow_html=True)
     
     # Session state for success
     if 'subscribed' not in st.session_state:
