@@ -16,10 +16,11 @@ clean_css = """
   
   /* Hide empty containers */
   .block-container {
-    padding-top: 6rem !important;
+    padding-top: 1rem !important;
   }
   
- 
+  .element-container:empty {
+    display: none !important;
   }
   
   /* Moving smoke trails */
@@ -106,7 +107,7 @@ clean_css = """
     font-size: 2.5rem;
     font-weight: 600;
     text-align: center;
-    margin: 1.5rem 0 1rem 0;
+    margin: 3rem 0 1rem 0;
   }
   
   .subtitle {
