@@ -210,7 +210,6 @@ clean_css = """
   }
 </style>
 
-<!-- Smoke trails -->
 <div class="trail-container trail-1">
   <div class="smoke-trail"></div>
 </div>
@@ -261,11 +260,11 @@ document.addEventListener('DOMContentLoaded', function() {
         allDivs.forEach(div => {
             const rect = div.getBoundingClientRect();
             const hasContent = div.textContent.trim() !== '' || 
-                             div.querySelector('input, button, form, h1, p, img, svg') ||
-                             div.classList.contains('trail-container') ||
-                             div.classList.contains('smoke-trail') ||
-                             div.querySelector('.trail-container') ||
-                             div.querySelector('.smoke-trail');
+                                     div.querySelector('input, button, form, h1, p, img, svg') ||
+                                     div.classList.contains('trail-container') ||
+                                     div.classList.contains('smoke-trail') ||
+                                     div.querySelector('.trail-container') ||
+                                     div.querySelector('.smoke-trail');
             
             if (rect.height > 20 && !hasContent && 
                 !div.closest('.form-container') && 
@@ -358,6 +357,9 @@ def send_confirmation_email(name, email):
         return False, f"SMTP error: {str(e)}"
     except Exception as e:
         return False, f"General error: {str(e)}"
+
+# --- CONNECT_TO_SHEETS FUNCTION MOVED HERE ---
+def connect_to_sheets():
     """Connect to Google Sheets"""
     try:
         scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -368,6 +370,7 @@ def send_confirmation_email(name, email):
         return sheet, None
     except Exception as e:
         return None, str(e)
+# --- END OF MOVED FUNCTION ---
 
 def main():
     # Apply CSS
@@ -417,10 +420,10 @@ def main():
                 else:
                     # Connect to sheets
                     with st.spinner("Subscribing..."):
-                        sheet, error = connect_to_sheets()
+                        sheet, error = connect_to_sheets() # This will now correctly call the function
                         
                         if error:
-                            st.error("Connection error. Please try again.")
+                            st.error(f"Connection error: {error}. Please check your Google Sheets setup and secrets.")
                         else:
                             try:
                                 # Check if email exists
@@ -440,12 +443,12 @@ def main():
                                     
                                     if not email_sent:
                                         # Show the specific error for debugging
-                                        st.error(f"Subscribed successfully, but confirmation email failed: {email_error}")
+                                        st.warning(f"Subscribed successfully, but confirmation email failed: {email_error}")
                                     
                                     st.rerun()
                                     
                             except Exception as e:
-                                st.error("Error subscribing. Please try again.")
+                                st.error(f"Error subscribing: {e}. Please try again.")
         
         st.markdown('</div>', unsafe_allow_html=True)
 
