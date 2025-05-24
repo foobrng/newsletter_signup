@@ -12,6 +12,10 @@ clean_css = """
     background-color: #000000;
     color: #ffffff;
     font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   
   /* Hide empty containers - enhanced */
@@ -30,8 +34,8 @@ clean_css = """
     display: none !important;
   }
   
-  /* Hide containers with minimal content */
-  .element-container:not(:has(input)):not(:has(button)):not(:has(form)):not(:has(h1)):not(:has(p)):not(:has(div[class*="success"])) {
+  /* Hide containers with minimal content - but preserve trails */
+  .element-container:not(:has(input)):not(:has(button)):not(:has(form)):not(:has(h1)):not(:has(p)):not(:has(div[class*="success"])):not(:has(.trail-container)):not(:has(.smoke-trail)) {
     min-height: 0 !important;
     height: 0 !important;
     margin: 0 !important;
@@ -46,8 +50,8 @@ clean_css = """
     display: none !important;
   }
   
-  /* Hide any div that's taking up space but has no visible content */
-  div:not([class*="form"]):not([class*="trail"]):not([class*="smoke"]):empty {
+  /* Hide any div that's taking up space but has no visible content - preserve trails */
+  div:not([class*="form"]):not([class*="trail"]):not([class*="smoke"]):not(.trail-container):not(.smoke-trail):empty {
     display: none !important;
   }
   
@@ -142,7 +146,7 @@ clean_css = """
     color: #888888;
     font-size: 1rem;
     text-align: center;
-    margin-bottom: 5rem;
+    margin-bottom: 3rem;
     font-weight: 300;
   }
   
@@ -256,11 +260,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const hasContent = div.textContent.trim() !== '' || 
                              div.querySelector('input, button, form, h1, p, img, svg') ||
                              div.classList.contains('trail-container') ||
-                             div.classList.contains('smoke-trail');
+                             div.classList.contains('smoke-trail') ||
+                             div.querySelector('.trail-container') ||
+                             div.querySelector('.smoke-trail');
             
             if (rect.height > 20 && !hasContent && 
                 !div.closest('.form-container') && 
-                !div.closest('.success-message')) {
+                !div.closest('.success-message') &&
+                !div.closest('.trail-container')) {
                 div.style.display = 'none';
             }
         });
