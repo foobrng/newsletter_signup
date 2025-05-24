@@ -378,8 +378,8 @@ def main():
     st.markdown(clean_css, unsafe_allow_html=True)
     
     # Clean title
-    st.markdown('<h2 class="clean-title">thoughts & other glitches</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="subtitle">just glitches and thought, not therapy.</p>', unsafe_allow_html=True)
+    st.markdown('<h1 class="clean-title">thoughts & other glitches</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="subtitle">just glitches and thoughts, not therapy.</p>', unsafe_allow_html=True)
     
     # Session state for success
     if 'subscribed' not in st.session_state:
