@@ -331,21 +331,21 @@ def send_confirmation_email(name, email):
         Welcome aboard!
         """
         
-        # Email content (simplified HTML) - Added note about spam folder
+        # Email content (simplified HTML) - Corrected P.S. line
         html_content = f"""
         <html>
         <body style="font-family: Arial, sans-serif; background-color: #000; color: #fff; padding: 20px;">
             <div style="max-width: 600px; margin: 0 auto; background-color: #111; border: 1px solid #333; border-radius: 8px; padding: 30px;">
                 <h1 style="color: #fff; text-align: center;">Thoughts & other Glitches</h1>
                 <p>Hey {name}! 👋</p>
-                <p><strong>You're now part of whatever this is.</strong>!</p>
+                <p><strong>You're now part of whatever this is.</strong></p>
                 <p>You'll receive updates whenever I publish new thoughts but hey! the thoughts here will be scattered.</p>
                 <p>Maybe sometimes useful.</p>
                 <p>The truths I’m learning, the paths I’m figuring out, and the notes that might find you exactly when you need them.</p>
                 <p>And look, there’s no promise of consistency.</p>
                 <p>Only that what lands will matter. Somehow.</p>
                 <p>Thanks for being here. The rest unfolds.</p>
-                <p>P.S. Tell Gmail it’s not spam so it drops in your inbox.</strong>.</p>
+                <p>P.S. Tell Gmail it’s not spam so it drops in your inbox.</p>
                 <p>Welcome aboard!</p>
                 <hr style="border: 1px solid #333; margin: 20px 0;">
                 <p style="color: #666; font-size: 12px;">You're receiving this because you subscribed to our newsletter.</p>
