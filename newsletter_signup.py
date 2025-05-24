@@ -304,7 +304,7 @@ def send_confirmation_email(name, email):
         
         # Create message
         message = MIMEMultipart("alternative")
-        message["Subject"] = "Welcome to Thoughts & Other Glitches!"
+        message["Subject"] = "thoughts & other glitches"
         message["From"] = sender_email
         message["To"] = email
         
@@ -312,11 +312,21 @@ def send_confirmation_email(name, email):
         text_content = f"""
         Hey {name}!
         
-        Thanks for subscribing to Thoughts & Other Glitches!
+        You're now part of whatever this is.
         
-        You'll receive updates whenever I publish new thoughts, ideas, and yes... glitches.
+        You'll receive updates whenever I publish new thoughts, but hey, the thoughts here will be scattered.
         
-        If you don't see it in your inbox, please check your spam or junk folder.
+        Maybe sometimes useful.
+
+        The truths I’m learning, the paths I’m figuring out, and the notes that might find you exactly when you need them.
+
+        And look, there’s no promise of consistency.
+
+        Only that what lands will matter. Somehow.
+
+        Thanks for being here. The rest unfolds.
+
+        P.S. Tell Gmail it’s not spam so it drops in your inbox.
         
         Welcome aboard!
         """
@@ -326,11 +336,16 @@ def send_confirmation_email(name, email):
         <html>
         <body style="font-family: Arial, sans-serif; background-color: #000; color: #fff; padding: 20px;">
             <div style="max-width: 600px; margin: 0 auto; background-color: #111; border: 1px solid #333; border-radius: 8px; padding: 30px;">
-                <h1 style="color: #fff; text-align: center;">Thoughts & Other Glitches</h1>
+                <h1 style="color: #fff; text-align: center;">Thoughts & other Glitches</h1>
                 <p>Hey {name}! 👋</p>
-                <p>Thanks for subscribing to <strong>Thoughts & Other Glitches</strong>!</p>
-                <p>You'll receive updates whenever I publish new thoughts, ideas, and yes... glitches.</p>
-                <p>If you don't see this email in your primary inbox, please check your <strong>spam or junk folder</strong>.</p>
+                <p><strong>You're now part of whatever this is.</strong>!</p>
+                <p>You'll receive updates whenever I publish new thoughts but hey! the thoughts here will be scattered.</p>
+                <p>Maybe sometimes useful.</p>
+                <p>The truths I’m learning, the paths I’m figuring out, and the notes that might find you exactly when you need them.</p>
+                <p>And look, there’s no promise of consistency.</p>
+                <p>Only that what lands will matter. Somehow.</p>
+                <p>Thanks for being here. The rest unfolds.</p>
+                <p>P.S. Tell Gmail it’s not spam so it drops in your inbox.</strong>.</p>
                 <p>Welcome aboard!</p>
                 <hr style="border: 1px solid #333; margin: 20px 0;">
                 <p style="color: #666; font-size: 12px;">You're receiving this because you subscribed to our newsletter.</p>
