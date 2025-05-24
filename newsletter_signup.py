@@ -136,10 +136,10 @@ clean_css = """
   /* Clean title - adjusted positioning */
   .clean-title {
     color: #ffffff;
-    font-size: 1.0rem;
-    font-weight: 400;
+    font-size: 2rem;
+    font-weight: 600;
     text-align: center;
-    margin: 3rem 0 1rem 0;
+    margin: 1.5rem 0 1rem 0;
   }
   
   .subtitle {
