@@ -316,10 +316,12 @@ def send_confirmation_email(name, email):
         
         You'll receive updates whenever I publish new thoughts, ideas, and yes... glitches.
         
+        If you don't see it in your inbox, please check your spam or junk folder.
+        
         Welcome aboard!
         """
         
-        # Email content (simplified HTML)
+        # Email content (simplified HTML) - Added note about spam folder
         html_content = f"""
         <html>
         <body style="font-family: Arial, sans-serif; background-color: #000; color: #fff; padding: 20px;">
@@ -328,6 +330,7 @@ def send_confirmation_email(name, email):
                 <p>Hey {name}! 👋</p>
                 <p>Thanks for subscribing to <strong>Thoughts & Other Glitches</strong>!</p>
                 <p>You'll receive updates whenever I publish new thoughts, ideas, and yes... glitches.</p>
+                <p>If you don't see this email in your primary inbox, please check your <strong>spam or junk folder</strong>.</p>
                 <p>Welcome aboard!</p>
                 <hr style="border: 1px solid #333; margin: 20px 0;">
                 <p style="color: #666; font-size: 12px;">You're receiving this because you subscribed to our newsletter.</p>
@@ -358,7 +361,6 @@ def send_confirmation_email(name, email):
     except Exception as e:
         return False, f"General error: {str(e)}"
 
-# --- CONNECT_TO_SHEETS FUNCTION MOVED HERE ---
 def connect_to_sheets():
     """Connect to Google Sheets"""
     try:
@@ -370,15 +372,14 @@ def connect_to_sheets():
         return sheet, None
     except Exception as e:
         return None, str(e)
-# --- END OF MOVED FUNCTION ---
 
 def main():
     # Apply CSS
     st.markdown(clean_css, unsafe_allow_html=True)
     
     # Clean title
-    st.markdown('<h1 class="clean-title">Thoughts & Other Glitches</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="subtitle">Subscribe for updates</p>', unsafe_allow_html=True)
+    st.markdown('<h2 class="clean-title">thoughts & other glitches</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="subtitle">just glitches and thought, not therapy.</p>', unsafe_allow_html=True)
     
     # Session state for success
     if 'subscribed' not in st.session_state:
@@ -391,12 +392,15 @@ def main():
         st.markdown(f"""
         <div class="success-message">
             <div class="success-icon">✓</div>
-            <strong>Thanks, {st.session_state.subscriber_name}!</strong><br>
-            You're subscribed.
+            <strong>subscribed, {st.session_state.subscriber_name}!</strong><br>
+            now the fun begins.
+            <br><br>
+            <small>If you don't see the confirmation email in your inbox, please check your spam or junk folder!</small>
         </div>
         """, unsafe_allow_html=True)
         
-        if st.button("Subscribe another", type="secondary"):
+        # Button text changed here
+        if st.button("overdose?", type="secondary"): # Changed button text
             st.session_state.subscribed = False
             st.session_state.subscriber_name = ""
             st.rerun()
@@ -409,7 +413,8 @@ def main():
             name = st.text_input("Name", placeholder="Your name")
             email = st.text_input("Email", placeholder="your@email.com")
             
-            submitted = st.form_submit_button("Subscribe", type="primary", use_container_width=True)
+            # Button text changed here
+            submitted = st.form_submit_button("plug in", type="primary", use_container_width=True) # Changed button text
             
             if submitted:
                 # Validation
@@ -419,8 +424,8 @@ def main():
                     st.error("Please enter a valid email")
                 else:
                     # Connect to sheets
-                    with st.spinner("Subscribing..."):
-                        sheet, error = connect_to_sheets() # This will now correctly call the function
+                    with st.spinner("Connecting..."): # Changed spinner text to be more generic
+                        sheet, error = connect_to_sheets()
                         
                         if error:
                             st.error(f"Connection error: {error}. Please check your Google Sheets setup and secrets.")
@@ -443,12 +448,12 @@ def main():
                                     
                                     if not email_sent:
                                         # Show the specific error for debugging
-                                        st.warning(f"Subscribed successfully, but confirmation email failed: {email_error}")
+                                        st.warning(f"Subscribed, but confirmation email failed: {email_error}. Please check your email configuration.")
                                     
                                     st.rerun()
                                     
                             except Exception as e:
-                                st.error(f"Error subscribing: {e}. Please try again.")
+                                st.error(f"Error processing subscription: {e}. Please try again.")
         
         st.markdown('</div>', unsafe_allow_html=True)
 
