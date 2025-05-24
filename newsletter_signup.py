@@ -292,9 +292,16 @@ def validate_email(email):
 def send_confirmation_email(name, email):
     """Send a confirmation email to the subscriber"""
     try:
+        # Check if email credentials exist
+        if "email" not in st.secrets:
+            return False, "Email configuration not found in secrets"
+        
         # Email configuration from Streamlit secrets
         sender_email = st.secrets["email"]["sender_email"]
         sender_password = st.secrets["email"]["sender_password"]
+        
+        if not sender_email or not sender_password:
+            return False, "Email credentials are empty"
         
         # Create message
         message = MIMEMultipart("alternative")
@@ -302,85 +309,42 @@ def send_confirmation_email(name, email):
         message["From"] = sender_email
         message["To"] = email
         
-        # Email content
+        # Simple text version as fallback
+        text_content = f"""
+        Hey {name}!
+        
+        Thanks for subscribing to Thoughts & Other Glitches!
+        
+        You'll receive updates whenever I publish new thoughts, ideas, and yes... glitches.
+        
+        Welcome aboard!
+        """
+        
+        # Email content (simplified HTML)
         html_content = f"""
-        <!DOCTYPE html>
         <html>
-        <head>
-            <style>
-                body {{
-                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-                    background-color: #000000;
-                    color: #ffffff;
-                    margin: 0;
-                    padding: 40px 20px;
-                }}
-                .container {{
-                    max-width: 600px;
-                    margin: 0 auto;
-                    background-color: #111111;
-                    border: 1px solid #333333;
-                    border-radius: 12px;
-                    padding: 40px;
-                    text-align: center;
-                }}
-                .title {{
-                    font-size: 28px;
-                    font-weight: 600;
-                    margin-bottom: 10px;
-                    color: #ffffff;
-                }}
-                .subtitle {{
-                    color: #888888;
-                    font-size: 16px;
-                    margin-bottom: 30px;
-                }}
-                .welcome {{
-                    font-size: 18px;
-                    margin-bottom: 20px;
-                    color: #ffffff;
-                }}
-                .message {{
-                    color: #cccccc;
-                    line-height: 1.6;
-                    margin-bottom: 30px;
-                }}
-                .footer {{
-                    color: #666666;
-                    font-size: 14px;
-                    margin-top: 30px;
-                    padding-top: 20px;
-                    border-top: 1px solid #333333;
-                }}
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <h1 class="title">Thoughts & Other Glitches</h1>
-                <p class="subtitle">Newsletter Subscription</p>
-                
-                <p class="welcome">Hey {name}! 👋</p>
-                
-                <div class="message">
-                    <p>Thanks for subscribing to <strong>Thoughts & Other Glitches</strong>!</p>
-                    <p>You'll receive updates whenever I publish new thoughts, ideas, and yes... glitches. Expect a mix of insights, musings, and the occasional digital oddity.</p>
-                    <p>Welcome aboard!</p>
-                </div>
-                
-                <div class="footer">
-                    <p>You're receiving this because you subscribed at our newsletter signup.</p>
-                    <p>If you didn't mean to subscribe, you can safely ignore this email.</p>
-                </div>
+        <body style="font-family: Arial, sans-serif; background-color: #000; color: #fff; padding: 20px;">
+            <div style="max-width: 600px; margin: 0 auto; background-color: #111; border: 1px solid #333; border-radius: 8px; padding: 30px;">
+                <h1 style="color: #fff; text-align: center;">Thoughts & Other Glitches</h1>
+                <p>Hey {name}! 👋</p>
+                <p>Thanks for subscribing to <strong>Thoughts & Other Glitches</strong>!</p>
+                <p>You'll receive updates whenever I publish new thoughts, ideas, and yes... glitches.</p>
+                <p>Welcome aboard!</p>
+                <hr style="border: 1px solid #333; margin: 20px 0;">
+                <p style="color: #666; font-size: 12px;">You're receiving this because you subscribed to our newsletter.</p>
             </div>
         </body>
         </html>
         """
         
-        # Create HTML part
+        # Create both text and HTML parts
+        text_part = MIMEText(text_content, "plain")
         html_part = MIMEText(html_content, "html")
+        
+        message.attach(text_part)
         message.attach(html_part)
         
-        # Send email
+        # Send email with detailed error catching
         with smtplib.SMTP("smtp.gmail.com", 587) as server:
             server.starttls()
             server.login(sender_email, sender_password)
@@ -388,8 +352,12 @@ def send_confirmation_email(name, email):
         
         return True, None
         
+    except smtplib.SMTPAuthenticationError as e:
+        return False, f"Authentication failed: {str(e)}"
+    except smtplib.SMTPException as e:
+        return False, f"SMTP error: {str(e)}"
     except Exception as e:
-        return False, str(e)
+        return False, f"General error: {str(e)}"
     """Connect to Google Sheets"""
     try:
         scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -471,8 +439,8 @@ def main():
                                     st.session_state.subscriber_name = name.strip()
                                     
                                     if not email_sent:
-                                        # Still show success but mention email issue
-                                        st.warning("Subscribed successfully, but confirmation email couldn't be sent.")
+                                        # Show the specific error for debugging
+                                        st.error(f"Subscribed successfully, but confirmation email failed: {email_error}")
                                     
                                     st.rerun()
                                     
