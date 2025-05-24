@@ -19,29 +19,35 @@ clean_css = """
     padding-top: 0.5rem !important;
   }
   
-  .element-container:empty {
-    display: none !important;
-  }
-  
-  /* Hide containers with only whitespace */
-  .element-container:not(:has(*)) {
-    display: none !important;
-  }
-  
-  /* Hide specific Streamlit elements that might be empty */
-  div[data-testid="element-container"]:empty {
-    display: none !important;
-  }
-  
-  /* Hide empty blocks */
-  .block-container > div:empty {
-    display: none !important;
-  }
-  
-  /* More aggressive empty hiding */
+  /* Aggressive empty container hiding */
+  .element-container:empty,
+  div[data-testid="element-container"]:empty,
+  .block-container > div:empty,
   .stApp > div:empty,
   .main > div:empty,
-  div[class*="css"]:empty {
+  div[class*="css"]:empty,
+  div[class*="st-"]:empty {
+    display: none !important;
+  }
+  
+  /* Hide containers with minimal content */
+  .element-container:not(:has(input)):not(:has(button)):not(:has(form)):not(:has(h1)):not(:has(p)):not(:has(div[class*="success"])) {
+    min-height: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: none !important;
+  }
+  
+  /* Target specific Streamlit containers that might be empty */
+  div[data-testid="column"],
+  div[data-testid="block-container"] > div:first-child:empty,
+  div[class*="css"][class*="e1f1d6gn"] {
+    display: none !important;
+  }
+  
+  /* Hide any div that's taking up space but has no visible content */
+  div:not([class*="form"]):not([class*="trail"]):not([class*="smoke"]):empty {
     display: none !important;
   }
   
@@ -136,7 +142,7 @@ clean_css = """
     color: #888888;
     font-size: 1rem;
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 5rem;
     font-weight: 300;
   }
   
@@ -220,15 +226,50 @@ clean_css = """
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Remove empty divs
-    setTimeout(function() {
-        const emptyDivs = document.querySelectorAll('div:empty, div[class*="css"]:empty');
-        emptyDivs.forEach(div => {
-            if (div.textContent.trim() === '') {
+    // More aggressive empty div removal
+    function hideEmptyElements() {
+        // Target all potential empty containers
+        const selectors = [
+            'div:empty',
+            'div[class*="css"]:empty',
+            'div[data-testid="element-container"]:empty',
+            'div[data-testid="column"]',
+            '.block-container > div:first-child:empty'
+        ];
+        
+        selectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(el => {
+                if (el.textContent.trim() === '' && !el.querySelector('input, button, form, h1, p')) {
+                    el.style.display = 'none';
+                    el.style.height = '0';
+                    el.style.margin = '0';
+                    el.style.padding = '0';
+                }
+            });
+        });
+        
+        // Also hide any div that's taking up vertical space but appears empty
+        const allDivs = document.querySelectorAll('div');
+        allDivs.forEach(div => {
+            const rect = div.getBoundingClientRect();
+            const hasContent = div.textContent.trim() !== '' || 
+                             div.querySelector('input, button, form, h1, p, img, svg') ||
+                             div.classList.contains('trail-container') ||
+                             div.classList.contains('smoke-trail');
+            
+            if (rect.height > 20 && !hasContent && 
+                !div.closest('.form-container') && 
+                !div.closest('.success-message')) {
                 div.style.display = 'none';
             }
         });
-    }, 100);
+    }
+    
+    // Run immediately and after a delay
+    hideEmptyElements();
+    setTimeout(hideEmptyElements, 100);
+    setTimeout(hideEmptyElements, 500);
 });
 </script>
 """
