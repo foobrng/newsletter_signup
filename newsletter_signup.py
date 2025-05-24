@@ -2,6 +2,9 @@ import streamlit as st
 import gspread
 from google.oauth2.service_account import Credentials
 import re
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # Clean CSS with smoke trails only
 clean_css = """
@@ -20,7 +23,7 @@ clean_css = """
   
   /* Hide empty containers - enhanced */
   .block-container {
-    padding-top: 5rem !important;
+    padding-top: 0.5rem !important;
   }
   
   /* Aggressive empty container hiding */
@@ -286,7 +289,107 @@ def validate_email(email):
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(pattern, email) is not None
 
-def connect_to_sheets():
+def send_confirmation_email(name, email):
+    """Send a confirmation email to the subscriber"""
+    try:
+        # Email configuration from Streamlit secrets
+        sender_email = st.secrets["email"]["sender_email"]
+        sender_password = st.secrets["email"]["sender_password"]
+        
+        # Create message
+        message = MIMEMultipart("alternative")
+        message["Subject"] = "Welcome to Thoughts & Other Glitches!"
+        message["From"] = sender_email
+        message["To"] = email
+        
+        # Email content
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{
+                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                    background-color: #000000;
+                    color: #ffffff;
+                    margin: 0;
+                    padding: 40px 20px;
+                }}
+                .container {{
+                    max-width: 600px;
+                    margin: 0 auto;
+                    background-color: #111111;
+                    border: 1px solid #333333;
+                    border-radius: 12px;
+                    padding: 40px;
+                    text-align: center;
+                }}
+                .title {{
+                    font-size: 28px;
+                    font-weight: 600;
+                    margin-bottom: 10px;
+                    color: #ffffff;
+                }}
+                .subtitle {{
+                    color: #888888;
+                    font-size: 16px;
+                    margin-bottom: 30px;
+                }}
+                .welcome {{
+                    font-size: 18px;
+                    margin-bottom: 20px;
+                    color: #ffffff;
+                }}
+                .message {{
+                    color: #cccccc;
+                    line-height: 1.6;
+                    margin-bottom: 30px;
+                }}
+                .footer {{
+                    color: #666666;
+                    font-size: 14px;
+                    margin-top: 30px;
+                    padding-top: 20px;
+                    border-top: 1px solid #333333;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1 class="title">Thoughts & Other Glitches</h1>
+                <p class="subtitle">Newsletter Subscription</p>
+                
+                <p class="welcome">Hey {name}! 👋</p>
+                
+                <div class="message">
+                    <p>Thanks for subscribing to <strong>Thoughts & Other Glitches</strong>!</p>
+                    <p>You'll receive updates whenever I publish new thoughts, ideas, and yes... glitches. Expect a mix of insights, musings, and the occasional digital oddity.</p>
+                    <p>Welcome aboard!</p>
+                </div>
+                
+                <div class="footer">
+                    <p>You're receiving this because you subscribed at our newsletter signup.</p>
+                    <p>If you didn't mean to subscribe, you can safely ignore this email.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        # Create HTML part
+        html_part = MIMEText(html_content, "html")
+        message.attach(html_part)
+        
+        # Send email
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login(sender_email, sender_password)
+            server.sendmail(sender_email, email, message.as_string())
+        
+        return True, None
+        
+    except Exception as e:
+        return False, str(e)
     """Connect to Google Sheets"""
     try:
         scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -361,8 +464,16 @@ def main():
                                     # Add subscriber
                                     sheet.append_row([name.strip(), email.lower().strip()])
                                     
+                                    # Send confirmation email
+                                    email_sent, email_error = send_confirmation_email(name.strip(), email.lower().strip())
+                                    
                                     st.session_state.subscribed = True
                                     st.session_state.subscriber_name = name.strip()
+                                    
+                                    if not email_sent:
+                                        # Still show success but mention email issue
+                                        st.warning("Subscribed successfully, but confirmation email couldn't be sent.")
+                                    
                                     st.rerun()
                                     
                             except Exception as e:
