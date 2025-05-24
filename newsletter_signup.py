@@ -415,7 +415,7 @@ def main():
         """, unsafe_allow_html=True)
         
         # Button text changed here
-        if st.button("overdose?", type="secondary"): # Changed button text
+        if st.button("use another enail?", type="secondary"): # Changed button text
             st.session_state.subscribed = False
             st.session_state.subscriber_name = ""
             st.rerun()
