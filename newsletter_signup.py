@@ -23,7 +23,7 @@ clean_css = """
   
   /* Hide empty containers - enhanced */
   .block-container {
-    padding-top: 0.5rem !important;
+    padding-top: 5rem !important;
   }
   
   /* Aggressive empty container hiding */
